@@ -67,7 +67,10 @@ function buildCharts(sample) {
     var filteredSample = array.filter(sampleObj => sampleObj.id == sample);
     
     // Deliverable 3: 1. Create a variable that filters the metadata array for the object with the desired sample number.
-    var filterMeta = metadata.filter(sampleObj => sampleObj.id == sample);
+    d3.json("samples.json").then((data) => {
+      var newmetaData = data.metadata;
+      var filterMeta = newmetaData.filter(sampleObj => sampleObj.id == sample);
+
 
     // Deliverable 1: 5. Create a variable that holds the first sample in the array.
     var filterResults = filteredSample[0];
@@ -128,7 +131,7 @@ function buildCharts(sample) {
     var guageData = [{
       domain: {x: [0,1], y: [0,1]},
       value: washfreq,
-      title: {text: "Belly Button Washing Frequency <br><sup>Scrubs per Week</sup>"},
+      title: {text: "Belly Button Washing Frequency <br><sub>Scrubs per Week"},
       type: "indicator",
       mode: "guage+number",
       guage: {
@@ -142,9 +145,10 @@ function buildCharts(sample) {
       }
     }];
     // Deliverable 3: 5. Create the layout for the gauge chart.
-    var guageLayout = {width: 600, height: 500};
+    var guageLayout = {automargin: true};
 
     // Deliverable 3: 6. Use Plotly to plot the gauge data and layout.
     Plotly.newPlot("guage", guageData, guageLayout);
+  });
   });
 }
