@@ -69,7 +69,7 @@ function buildCharts(sample) {
     // Deliverable 3: 1. Create a variable that filters the metadata array for the object with the desired sample number.
     d3.json("samples.json").then((data) => {
       var newmetaData = data.metadata;
-      var filterMeta = newmetaData.filter(sampleObj => sampleObj.id == sample);
+      var filterMeta = newmetaData.filter(metaObj => metaObj.id == sample);
 
 
     // Deliverable 1: 5. Create a variable that holds the first sample in the array.
@@ -89,7 +89,7 @@ function buildCharts(sample) {
     // Deliverable 1: 7. Create the yticks for the bar chart.
     // Hint: Get the the top 10 otu_ids and map them in descending order 
     // so the otu_ids with the most bacteria are last. 
-    var yticks =  otu_ids.map(sampleObj => "OTU"+sampleObj).slice(0,10).reverse();
+    var yticks =  otu_ids.map(sampleObj => "OTU"+sampleObj).slice(0,10);
 
     // Deliverable 1: 8. Create the trace for the bar chart. 
     var barData = [{
@@ -115,40 +115,45 @@ function buildCharts(sample) {
         text: otu_labels,
         mode: "markers",
         markers: {
-          color: otu_ids,
-          size: sampleValues
+          color: sampleValues,
+          size: sampleValues,
+          colorscale: "Portland"
         }
   }];
 
     // Deliverable 2: 2. Create the layout for the bubble chart.
     var bubbleLayout = {
-         title: "Bacteria Cultures Per Sample"
+         title: "Bacteria Cultures Per Sample",
+         xaxis: {title: "OTU ID"},
+         hovermode: "closest"
   };
     // Deliverable 2: 3. Use Plotly to plot the data with the layout.
     Plotly.newPlot("bubble", bubbleData, bubbleLayout);
     
     // Deliverable 3: 4. Create the trace for the gauge chart.
-    var guageData = [{
-      domain: {x: [0,1], y: [0,1]},
+    var gaugeData = [{
       value: washfreq,
-      title: {text: "Belly Button Washing Frequency <br><sub>Scrubs per Week"},
       type: "indicator",
-      mode: "guage+number",
+      mode: "gauge+number",
+      title: {text: "Belly Button Washing Frequency"},
       guage: {
-        steps: [
-          {range: [0,2], color: "red"},
-          {range: [2,4], color: "orange"},
-          {range: [4,6], color: "yellow"},
-          {range: [6,8], color: "lightgreen"},
-          {range: [8,10], color: "green"}
-        ]
+        axis: {range: [null,10]},
+        bar: {color: "black"},
+        steps:[
+          {range: [0, 2], color: "red"},
+          {range: [2, 4], color: "orange"},
+          {range: [4, 6], color: "yellow"},
+          {range: [6, 8], color: "lightgreen"},
+          {range: [8, 10], color: "green"}
+        ],
+        dtick: 2
       }
     }];
     // Deliverable 3: 5. Create the layout for the gauge chart.
-    var guageLayout = {automargin: true};
+    var gaugeLayout = {automargin: true};
 
     // Deliverable 3: 6. Use Plotly to plot the gauge data and layout.
-    Plotly.newPlot("guage", guageData, guageLayout);
+    Plotly.newPlot("gauge", gaugeData, gaugeLayout);
   });
   });
 }
